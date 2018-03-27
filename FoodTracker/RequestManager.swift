@@ -12,7 +12,7 @@ class RequestManager {
     
     //andCompletionHandler:(void(^)(NSData *data, UIImage *image))completionHandler
     
-    func login(userName: String?, password: String?, completionHandler: @escaping (String) -> Void) {
+    func login(userName: String?, password: String?, completionHandler: @escaping ((String?, String?)) -> Void) {
         
         let postData = [
             "username": userName ?? "",
@@ -42,8 +42,9 @@ class RequestManager {
                 return
             }
             
-            let token = json["token"]
-            completionHandler(token as! String)
+            //let token = json["token"]
+            let responseTuple = (token: json["token"] as? String, error: json["error"] as? String)
+            completionHandler(responseTuple)
             
             guard let response = response as? HTTPURLResponse else {
                 print("no response returned from server \(String(describing: error))")
@@ -61,7 +62,7 @@ class RequestManager {
         
     }
     
-    func signUp(userName: String?, password: String?, completionHandler: @escaping (String) -> Void) {
+    func signUp(userName: String?, password: String?, completionHandler: @escaping ((String?, String?)) -> Void) {
         
         let postData = [
             "username": userName ?? "",
@@ -91,9 +92,12 @@ class RequestManager {
                 return
             }
             
-            let token = json["token"]
-            let error = json["error"]
-            completionHandler(token as! String)
+//            let token = json["token"]
+//            let error = json["error"]
+//            completionHandler(token as! String)
+            
+            let responseTuple = (token: json["token"] as? String, error: json["error"] as? String)
+            completionHandler(responseTuple)
             
             
             guard let response = response as? HTTPURLResponse else {

@@ -15,20 +15,41 @@ class SignUpViewController: UIViewController {
     var requestManager: RequestManager!
     
     @IBAction func signUp(_ sender: Any) {
-        UserDefaults.standard.set(usernameTextfield.text, forKey: "username")
-        UserDefaults.standard.set(passwordTextfield.text, forKey: "password")
-        requestManager.signUp(userName: usernameTextfield.text, password: passwordTextfield.text) { (token: String) in
-            UserDefaults.standard.set(token, forKey: "token")
-            self.performSegue(withIdentifier: "signedUpSegue", sender: self)
+       
+        requestManager.signUp(userName: usernameTextfield.text, password: passwordTextfield.text) { (token: String?, error: String?) in
+            
+            DispatchQueue.main.async {
+                if let token = token {
+                    UserDefaults.standard.set(self.usernameTextfield.text, forKey: "username")
+                    UserDefaults.standard.set(self.passwordTextfield.text, forKey: "password")
+                    UserDefaults.standard.set(token, forKey: "token")
+                    self.performSegue(withIdentifier: "signedUpSegue", sender: self)
+                } else if let error = error {
+                    let alert = UIAlertController(title: "\(error)!", message: nil, preferredStyle: .alert)
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
+            
         }
     }
     
     @IBAction func login(_ sender: Any) {
-        UserDefaults.standard.set(usernameTextfield.text, forKey: "username")
-        UserDefaults.standard.set(passwordTextfield.text, forKey: "password")
-        requestManager.login(userName: usernameTextfield.text, password: passwordTextfield.text) { (token: String) in
-            UserDefaults.standard.set(token, forKey: "token")
-            self.performSegue(withIdentifier: "signedUpSegue", sender: self)
+        
+        requestManager.login(userName: usernameTextfield.text, password: passwordTextfield.text) { (token: String?, error: String?) in
+            
+            DispatchQueue.main.async {
+                
+                if let token = token {
+                    UserDefaults.standard.set(self.usernameTextfield.text, forKey: "username")
+                    UserDefaults.standard.set(self.passwordTextfield.text, forKey: "password")
+                    UserDefaults.standard.set(token, forKey: "token")
+                    self.performSegue(withIdentifier: "signedUpSegue", sender: self)
+                } else if let error = error {
+                    let alert = UIAlertController(title: "\(error)!", message: nil, preferredStyle: .alert)
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
+            
         }
     }
     
